@@ -16,8 +16,12 @@ public class Pong {
         boolean gameOver = false;
         int winner = 0;
 
+        System.out.print("\033[?25l");
+        System.out.flush();
+
         while (!gameOver) {
             System.out.print("\033[2J\033[H");
+            System.out.flush();
             render(paddle1_x, paddle1_y, paddle2_x, paddle2_y, ball_x, ball_y, score1, score2);
 
             int action = handleInput();
@@ -52,8 +56,8 @@ public class Pong {
                 ball_y = 1;
                 dy = 1;
             }
-            if (ball_y - 1 > HEIGHT - 2) {
-                ball_y = HEIGHT - 2;
+            if (ball_y - 1 > HEIGHT - 3) {
+                ball_y = HEIGHT - 3;
                 dy = -1;
             }
 
@@ -109,33 +113,16 @@ public class Pong {
             }
         }
         System.out.print("\033[2J\033[H");
+        System.out.flush();
         render(paddle1_x, paddle1_y, paddle2_x, paddle2_y, ball_x, ball_y, score1, score2);
         System.out.println("\nWinner: Player " + winner + "! Congratulations!");
     }
 
-/*    private static void clearConsole() {
-        try {
-            String os = System.getProperty("os.name").toLowerCase();
-            ProcessBuilder pb;
-            if (os.contains("win")) {
-                pb = new ProcessBuilder("cmd", "/c", "cls");
-            } else {
-                pb = new ProcessBuilder("clear");
-            }
-            pb.inheritIO().start().waitFor();
-        } catch (Exception e) {
-            // Если команда не работает – используем ANSI (может не работать) или прокрутку
-            System.out.print("\033[2J\033[H");
-            System.out.flush();
-            // альтернатива – просто напечатать много пустых строк:
-            // for (int i = 0; i < 50; i++) System.out.println();
-            // System.out.print("\033[H");
-        }
-    }*/
 
     private static void render(int paddle1_x, int paddle1_y, int paddle2_x, int paddle2_y,
                                int ball_x, int ball_y, int score1, int score2) {
         System.out.print("\033[2J\033[H");
+        System.out.flush();
 
         for (int i = 0; i < WIDTH; i++) System.out.print("#");
         System.out.println();
