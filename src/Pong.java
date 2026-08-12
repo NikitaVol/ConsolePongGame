@@ -1,28 +1,25 @@
+import core.GameState;
+import render.ConsoleRenderer;
+import util.Constants;
+import javax.swing.*;
 import java.util.Scanner;
 
 public class Pong {
-    private static final int WIDTH = 80;
-    private static final int HEIGHT = 25;
-    private static final int MAX_SCORE = 21;
-
     private static final Scanner scanner = new Scanner(System.in);
+    private static ConsoleRenderer renderer;
+    private static GameState state;
 
     public static void main(String[] args) {
-        int paddle1_x = 2, paddle1_y = 11;
-        int paddle2_x = 77, paddle2_y = 11;
-        int ball_x = 40, ball_y = 12;
-        int dx = -1, dy = 0;
-        int score1 = 0, score2 = 0;
-        boolean gameOver = false;
-        int winner = 0;
 
-        System.out.print("\033[?25l");
-        System.out.flush();
+        renderer = new ConsoleRenderer();
 
-        while (!gameOver) {
+        while (!state.isGameOver()) {
             System.out.print("\033[2J\033[H");
+            System.out.print("\033[?25l");
             System.out.flush();
-            render(paddle1_x, paddle1_y, paddle2_x, paddle2_y, ball_x, ball_y, score1, score2);
+            renderer.render(state);
+            System.out.print("\033[?25h");
+            System.out.flush();
 
             int action = handleInput();
             if (action == -1) {
@@ -37,13 +34,13 @@ public class Pong {
                     if (paddle1_y > 1) paddle1_y--;
                     break;
                 case 'z':
-                    if (paddle1_y < HEIGHT - 4) paddle1_y++;
+                    if (paddle1_y < Constants.HEIGHT - 4) paddle1_y++;
                     break;
                 case 'k':
                     if (paddle2_y > 1) paddle2_y--;
                     break;
                 case 'm':
-                    if (paddle2_y < HEIGHT - 4) paddle2_y++;
+                    if (paddle2_y < Constants.HEIGHT - 4) paddle2_y++;
                     break;
                 default:
                     break;
@@ -56,8 +53,8 @@ public class Pong {
                 ball_y = 1;
                 dy = 1;
             }
-            if (ball_y - 1 > HEIGHT - 3) {
-                ball_y = HEIGHT - 3;
+            if (ball_y - 1 > Constants.HEIGHT - 3) {
+                ball_y = Constants.HEIGHT - 3;
                 dy = -1;
             }
 
@@ -95,7 +92,7 @@ public class Pong {
                 dx = 1;
                 dy = 0;
             }
-            if (ball_x - 1 > WIDTH - 3) {
+            if (ball_x - 1 > Constants.WIDTH - 3) {
                 score1++;
                 ball_x = 40;
                 ball_y = 12;
@@ -103,52 +100,21 @@ public class Pong {
                 dy = 0;
             }
 
-            if (score1 >= MAX_SCORE) {
+            if (score1 >= Constants.MAX_SCORE) {
                 gameOver = true;
                 winner = 1;
             }
-            if (score2 >= MAX_SCORE) {
+            if (score2 >= Constants.MAX_SCORE) {
                 gameOver = true;
                 winner = 2;
             }
         }
         System.out.print("\033[2J\033[H");
         System.out.flush();
-        render(paddle1_x, paddle1_y, paddle2_x, paddle2_y, ball_x, ball_y, score1, score2);
+        renderer.render(state);
         System.out.println("\nWinner: Player " + winner + "! Congratulations!");
     }
 
-
-    private static void render(int paddle1_x, int paddle1_y, int paddle2_x, int paddle2_y,
-                               int ball_x, int ball_y, int score1, int score2) {
-        System.out.print("\033[2J\033[H");
-        System.out.flush();
-
-        for (int i = 0; i < WIDTH; i++) System.out.print("#");
-        System.out.println();
-
-        for (int y = 0; y < HEIGHT - 2; y++) {
-            System.out.print("#");
-            for (int x = 0; x < WIDTH - 2; x++) {
-                char ch = ' ';
-                if (x == paddle1_x - 1 && y >= paddle1_y - 1 && y <= paddle1_y + 1)
-                    ch = '|';
-                else if (x == paddle2_x - 1 && y >= paddle2_y - 1 && y <= paddle2_y + 1)
-                    ch = '|';
-                else if (x == ball_x - 1 && y == ball_y - 1)
-                    ch = 'o';
-                System.out.print(ch);
-            }
-            System.out.println("#");
-        }
-
-        for (int i = 0; i < WIDTH; i++) System.out.print("#");
-        System.out.println();
-
-        System.out.println("Player1: " + score1 + "   Player2: " + score2);
-        System.out.println("Controls: A/Z (Player 1), K/M (Player 2), Q - Exit");
-        System.out.println("ENTER required");
-    }
 
     private static int handleInput() {
         String line = scanner.nextLine();
