@@ -16,11 +16,11 @@ public class ConsoleRenderer implements Renderer {
             System.out.print("#");
             for (int x = 0; x < Constants.WIDTH - 2; x++) {
                 char ch = ' ';
-                if (x == state.getPaddle1_x() - 1 && y >= state.getPaddle1_y() - 1 && y <= state.getPaddle1_y() + 1)
+                if (x == Constants.DEFAULT_PADDEL1_X - 1 && y >= state.getPaddle1Y() - 1 && y <= state.getPaddle1Y() + 1)
                     ch = '|';
-                else if (x == state.getPaddle2_x() - 1 && y >= state.getPaddle2_y() - 1 && y <= state.getPaddle2_y() + 1)
+                else if (x == Constants.DEFAULT_PADDEL2_X - 1 && y >= state.getPaddle2Y() - 1 && y <= state.getPaddle2Y() + 1)
                     ch = '|';
-                else if (x == state.getBall_x() - 1 && y == state.getBall_y() - 1)
+                else if (x == state.getBallX() - 1 && y == state.getBallY() - 1)
                     ch = 'o';
                 System.out.print(ch);
             }
